@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Scripture Notes</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ── TOP HEADER ── -->
+    <header id="app-header">
+      <div class="header-left">
+        <span class="app-logo">✦</span>
+        <span class="app-title">Scripture Labs</span>
+      </div>
+
+      <div class="tab-switcher" id="tab-switcher">
+        <button class="tab-btn active" data-tab="bible">Bible</button>
+        <button class="tab-btn" data-tab="notes">Notes</button>
+      </div>
+
+      <div class="header-right">
+        <button class="icon-btn" id="btn-import" title="Import Note">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </button>
+        <button class="icon-btn" id="btn-export" title="Export Note as PDF">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── MAIN CONTENT AREA ── -->
+    <main id="main-content">
+
+      <!-- ══ LEFT PANEL: BIBLE READER ══ -->
+      <section class="panel" id="panel-bible" data-panel="bible">
+        <div class="panel-controls" id="bible-controls">
+          <div class="select-group">
+            <label class="select-label">Book</label>
+            <div class="custom-select-wrap">
+              <select id="sel-book" class="custom-select"></select>
+            </div>
+          </div>
+          <div class="select-group">
+            <label class="select-label">Chapter</label>
+            <div class="custom-select-wrap">
+              <select id="sel-chapter" class="custom-select"></select>
+            </div>
+          </div>
+          <div class="select-group">
+            <label class="select-label">Verse</label>
+            <div class="custom-select-wrap">
+              <select id="sel-verse" class="custom-select"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-body" id="bible-body">
+          <div class="loading-state" id="bible-loading">
+            <div class="loader-ring"></div>
+            <p>Loading Scripture…</p>
+          </div>
+          <div id="verse-container"></div>
+        </div>
+      </section>
+
+      <!-- ══ DIVIDER ══ -->
+      <div class="panel-divider" id="panel-divider"></div>
+
+      <!-- ══ RIGHT PANEL: NOTES ══ -->
+      <section class="panel" id="panel-notes" data-panel="notes">
+
+        <!-- ── SUB-VIEW A: NOTE EDITOR ── -->
+        <div id="view-editor" class="notes-view active">
+
+          <!-- Top bar: back + save status + delete -->
+          <div class="editor-topbar" id="notes-controls">
+            <button class="topbar-btn" id="btn-back-to-list" title="All Notes">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+              <span>Notes</span>
+            </button>
+            <span class="save-indicator" id="save-indicator">
+              <span class="save-dot"></span>
+              <span id="save-text"></span>
+            </span>
+            <button class="topbar-btn danger" id="btn-delete-note" title="Delete note">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+            </button>
+          </div>
+
+          <!-- Editable title -->
+          <div
+            id="note-title"
+            contenteditable="true"
+            spellcheck="true"
+            data-placeholder="Note title…"
+          ></div>
+
+          <!-- Rich text formatting toolbar -->
+          <div class="format-toolbar" id="format-toolbar">
+            <button class="fmt-btn" data-cmd="bold" title="Bold (Ctrl+B)">
+              <strong>B</strong>
+            </button>
+            <button class="fmt-btn" data-cmd="italic" title="Italic (Ctrl+I)">
+              <em>I</em>
+            </button>
+            <button class="fmt-btn" data-cmd="underline" title="Underline (Ctrl+U)">
+              <span style="text-decoration:underline">U</span>
+            </button>
+            <button class="fmt-btn" data-cmd="strikeThrough" title="Strikethrough">
+              <span style="text-decoration:line-through">S</span>
+            </button>
+            <div class="fmt-divider"></div>
+            <button class="fmt-btn" data-cmd="insertUnorderedList" title="Bullet list">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1.5" fill="currentColor" stroke="none"/></svg>
+            </button>
+            <button class="fmt-btn" data-cmd="insertOrderedList" title="Numbered list">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><text x="2" y="8" font-size="7" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="bold">1.</text><text x="2" y="14" font-size="7" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="bold">2.</text><text x="2" y="20" font-size="7" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="bold">3.</text></svg>
+            </button>
+            <div class="fmt-divider"></div>
+            <button class="fmt-btn" data-cmd="heading" title="Heading">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h16M4 18h10"/><text x="3" y="9" font-size="8" fill="currentColor" stroke="none" font-family="sans-serif" font-weight="bold"></text></svg>
+              <span style="font-size:13px;font-weight:800;letter-spacing:-0.5px">H</span>
+            </button>
+            <button class="fmt-btn" data-cmd="removeFormat" title="Clear formatting">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 19L17.5 7.5M9.5 4l5 5L7 17H4v-3l8-8z"/><line x1="19" y1="19" x2="14" y2="14"/></svg>
+            </button>
+          </div>
+
+          <div class="panel-body" id="notes-body">
+            <div
+              id="notes-editor"
+              contenteditable="true"
+              spellcheck="true"
+              data-placeholder="Start writing your notes here…&#10;&#10;Tip: Type a Bible verse like John 3:16 and it turns blue — tap it to jump there."
+            ></div>
+          </div>
+
+          <!-- Recent notes bar -->
+          <div id="notes-list-bar">
+            <div class="notes-list-label-row">
+              <span class="notes-list-label">Recent</span>
+              <button class="btn-create-note" id="btn-create-note-bar">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                New Note
+              </button>
+            </div>
+            <div id="notes-chips"></div>
+          </div>
+        </div>
+
+        <!-- ── SUB-VIEW B: NOTE LIST ── -->
+        <div id="view-list" class="notes-view">
+
+          <div class="panel-controls" id="list-controls">
+            <span class="list-heading">All Notes</span>
+            <button class="btn-create-note large" id="btn-create-note-list">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              New Note
+            </button>
+          </div>
+
+          <div class="panel-body" id="list-body">
+            <div id="notes-list-items"></div>
+          </div>
+
+        </div>
+
+      </section>
+    </main>
+
+  </div>
+
+  <input type="file" id="file-import" accept=".txt,.md,.html" style="display:none" />
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <p id="modal-message"></p>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="modal-cancel">Cancel</button>
+        <button class="modal-btn confirm" id="modal-confirm">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="bible.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
